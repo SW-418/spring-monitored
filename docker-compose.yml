@@ -1,0 +1,5 @@
+services:
+  spring-monitored:
+    build: .
+    ports:
+      - "8080:8080"
