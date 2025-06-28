@@ -3,3 +3,27 @@ services:
     build: .
     ports:
       - "8080:8080"
+    depends_on:
+      - datadog
+  datadog:
+    image: datadog/agent:7-jmx
+    environment:
+      DD_API_KEY: ${DD_API_KEY}
+      DD_SITE: ${DD_SITE}
+      DD_HOSTNAME: ${DD_HOSTNAME}
+
+      # Open Telemetry port
+      DD_OTLP_CONFIG_RECEIVER_PROTOCOLS_HTTP_ENDPOINT: 0.0.0.0:4318
+
+      # Log config
+      DD_LOGS_ENABLED: true
+      DD_OTLP_CONFIG_LOGS_ENABLED: true
+
+      # APM config
+      DD_APM_ENABLED: true
+      DD_APM_NON_LOCAL_TRAFFIC: true
+
+      # Allows collection of live process information: https://docs.datadoghq.com/infrastructure/process
+      DD_PROCESS_CONFIG_PROCESS_COLLECTION_ENABLED: true
+    ports:
+      - "4318:4318"
