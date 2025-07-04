@@ -10,6 +10,7 @@ RUN curl -L https://github.com/open-telemetry/opentelemetry-java-instrumentation
 RUN ./gradlew dependencies
 
 COPY src ./src
+COPY src/main/resources/log4j2.xml /app/log4j2.xml
 
 RUN ./gradlew build -x test
 
@@ -19,6 +20,7 @@ WORKDIR /app
 
 COPY --from=build /app/opentelemetry-javaagent.jar /opentelemetry-javaagent.jar
 COPY --from=build /app/build/libs/spring-monitored-*.jar /app.jar
+COPY --from=build /app/log4j2.xml /app/log4j2.xml
 
 ENV JAVA_TOOL_OPTIONS="-javaagent:/opentelemetry-javaagent.jar"
 ENV OTEL_SERVICE_NAME=spring-monitored
